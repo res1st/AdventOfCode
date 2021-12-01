@@ -1,8 +1,8 @@
-### Java Spring template project
+### Advent of Code
 
-This project is based on a GitLab [Project Template](https://docs.gitlab.com/ee/gitlab-basics/create-project.html).
+Solutions for coding puzzles
 
-Improvements can be proposed in the [original project](https://gitlab.com/gitlab-org/project-templates/spring).
+https://adventofcode.com/2021/
 
 ### CI/CD with Auto DevOps
 

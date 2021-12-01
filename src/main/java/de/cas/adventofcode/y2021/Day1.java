@@ -6,14 +6,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import de.cas.adventofcode.util.AdventUtil;
+
 public class Day1 {
 
 	public static void main(String[] args) throws IOException {
-		solution2();
+		part2();
 	}
 
-	private static void solution1() throws IOException {
-		Integer[] numbersArray = readFile();
+	private static void part1() throws IOException {
+		int[] numbersArray = readFile();
 		System.out.println("Number of total lines: " + numbersArray.length);
 
 		int numberOfIncreases = 0;
@@ -30,8 +32,8 @@ public class Day1 {
 		System.out.println("Number of increases: " + numberOfIncreases);
 	}
 
-	private static void solution2() throws IOException {
-		Integer[] numbersArray = readFile();
+	private static void part2() throws IOException {
+		int[] numbersArray = AdventUtil.readFileByLineAsInts("2021", "day1_input.txt");
 
 		int numberOfIncreases = 0;
 		for (int i = 0; i < numbersArray.length - 3; i++) {
@@ -48,19 +50,19 @@ public class Day1 {
 		System.out.println("Number of increases: " + numberOfIncreases);
 	}
 
-	private static int sum3Window(int i, Integer[] numbersArray) {
+	private static int sum3Window(int i, int[] numbersArray) {
 		return numbersArray[i] + numbersArray[i+1] + numbersArray[i+2];
 	}
 
-	private static boolean isIncrease(Integer first, Integer second) {
+	private static boolean isIncrease(Integer first, int second) {
 		return first < second;
 	}
 
-	private static Integer[] readFile() throws IOException {
+	private static int[] readFile() throws IOException {
 		Path path = Paths.get("src", "main", "resources", "day1_input.txt");
 
 		try (Stream<String> linesStream = Files.lines(path)) {
-			return linesStream.map(row -> Integer.parseInt(row)).toArray(Integer[]::new);
+			return linesStream.mapToInt(row -> Integer.parseInt(row)).toArray();
 		}
 	}
 }
