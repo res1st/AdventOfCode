@@ -1,4 +1,4 @@
-package de.cas.adventofcode.y2021;
+package de.cas.adventofcode.y2021.day1;
 
 import java.io.IOException;
 import java.nio.file.Files;
