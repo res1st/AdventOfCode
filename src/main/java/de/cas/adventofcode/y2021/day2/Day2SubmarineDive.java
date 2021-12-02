@@ -18,7 +18,7 @@ public class Day2SubmarineDive {
 	}
 	
 	private void dive() throws IOException {
-		List<Course> plannedCourse = AdventUtil.readFileByLineWithMapping("2021", "day2_input.txt", new CourseMappingFunction());
+		List<Course> plannedCourse = AdventUtil.readFileByLineWithMapping("2021", "day2_input.txt", row -> mapToCourse(row));
 
 		Point point = new Point();
 		printPosition(point);
@@ -45,7 +45,7 @@ public class Day2SubmarineDive {
 	}
 
 	private void divePuzzplePart2() throws IOException {
-		List<Course> plannedCourse = AdventUtil.readFileByLineWithMapping("2021", "day2_input.txt", new CourseMappingFunction());
+		List<Course> plannedCourse = AdventUtil.readFileByLineWithMapping("2021", "day2_input.txt", row -> mapToCourse(row));
 
 		AimPoint point = new AimPoint();
 		printPosition(point);
@@ -85,13 +85,4 @@ public class Day2SubmarineDive {
 		Assert.isTrue(splittedValues.length == 2, "invalid row");
 		return new Course(StringUtils.trim(splittedValues[0]), Integer.parseInt(StringUtils.trim(splittedValues[1])));
 	}
-
-	public class CourseMappingFunction implements RowMappingFunction<Course> {
-
-		@Override
-		public Course apply(String row) {
-			return mapToCourse(row);
-		}
-	}
-
 }

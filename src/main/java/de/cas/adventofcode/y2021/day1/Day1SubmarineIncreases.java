@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import de.cas.adventofcode.util.AdventUtil;
 
-public class Day1 {
+public class Day1SubmarineIncreases {
 
 	public static void main(String[] args) throws IOException {
 		part2();
