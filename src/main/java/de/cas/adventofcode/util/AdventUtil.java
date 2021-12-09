@@ -43,6 +43,19 @@ public class AdventUtil {
 		}
 	}
 
+	public static int[][] readFileByLineByCharAsInt(String folder, String fileName) throws IOException {
+		Path path = Paths.get("src", "main", "resources", folder, fileName);
+
+		try (Stream<String> linesStream = Files.lines(path)) {
+			return linesStream.map(row -> stringCharsToInts(row)).toArray(int[][]::new);
+		}
+	}
+	
+	private static int[] stringCharsToInts(String line) {
+		String[] chars = line.split("");
+		return Arrays.stream(chars).map(c -> Integer.parseInt(c)).mapToInt(i -> i).toArray();
+	}
+
 	public static double[][] parseMatrix(String[] rows, String delimiter) {
 		int numberOfRows = rows.length;
 		int numberOfColumns = rows[0].split(delimiter).length;
