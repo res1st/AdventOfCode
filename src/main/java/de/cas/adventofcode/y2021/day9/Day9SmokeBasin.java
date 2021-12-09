@@ -71,23 +71,27 @@ public class Day9SmokeBasin {
 			return Collections.emptyList();
 		}
 
-		if (point.x() - 1 >= 0 && 1 + valueOfPoint == input[point.x() - 1][point.y()]) {
-			if (input[point.x() - 1][point.y()] < 9) {
+		if (point.x() - 1 >= 0) {
+			int diff = Math.abs(valueOfPoint - input[point.x() - 1][point.y()]);
+			if (input[point.x() - 1][point.y()] < 9 && (diff == 1 || diff == 0)) {
 				neighbours.add(new ImmutablePoint(point.x() - 1, point.y()));
 			}
 		}
-		if (point.x() + 1 < input.length && 1 + valueOfPoint == input[point.x() + 1][point.y()]) {
-			if (input[point.x() + 1][point.y()] < 9) {
+		if (point.x() + 1 < input.length) {
+			int diff = Math.abs(valueOfPoint - input[point.x() + 1][point.y()]);
+			if (input[point.x() + 1][point.y()] < 9 && (diff == 1 || diff == 0)) {
 				neighbours.add(new ImmutablePoint(point.x() + 1, point.y()));
 			}
 		}
-		if (point.y() - 1 >= 0 && 1 + valueOfPoint == input[point.x()][point.y() - 1]) {
-			if (input[point.x()][point.y() - 1] < 9) {
+		if (point.y() - 1 >= 0) {
+			int diff = Math.abs(valueOfPoint - input[point.x()][point.y() - 1]);
+			if (input[point.x()][point.y() - 1] < 9 && (diff == 1 || diff == 0)) {
 				neighbours.add(new ImmutablePoint(point.x(), point.y() - 1));
 			}
 		}
-		if (point.y() + 1 < input[0].length && 1 + valueOfPoint == input[point.x()][point.y() + 1]) {
-			if (input[point.x()][point.y() + 1] < 9) {
+		if (point.y() + 1 < input[0].length)  {
+			int diff = Math.abs(valueOfPoint - input[point.x()][point.y() + 1]);
+			if (input[point.x()][point.y() + 1] < 9 && (diff == 1 || diff == 0)) {
 				neighbours.add(new ImmutablePoint(point.x(), point.y() + 1));
 			}
 		}
