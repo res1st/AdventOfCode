@@ -18,12 +18,12 @@ import de.cas.adventofcode.util.ImmutablePoint;
  */
 public class Day9SmokeBasin {
 
-	private static final String FILENAME = "day9_testinput.txt";
+	private static final String FILENAME = "day9_input.txt";
 
 	public static void main(String[] args) throws IOException {
 		Day9SmokeBasin day9 = new Day9SmokeBasin();
 		int[][] input = AdventUtil.readFileByLineByCharAsInt("2021", FILENAME);
-		System.out.println(Arrays.deepToString(input));
+//		System.out.println(Arrays.deepToString(input));
 		List<ImmutablePoint> lowPoints = day9.findLowPoints(input); // solution part 1
 		day9.calculateSizeOfBasins(lowPoints, input); // solution part 2
 	}
