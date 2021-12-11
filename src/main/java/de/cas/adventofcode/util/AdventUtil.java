@@ -13,12 +13,26 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.stream.Streams;
-import org.apache.commons.math3.linear.Array2DRowFieldMatrix;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 
 public class AdventUtil {
+
+	public static final int[][] allDirectionsWithDiagonal = new int[][] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 },
+			{ 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
+
+	public static <T> void doSurroundingsWithDiagonal(T[][] matrix, int x, int y,
+			Function<T, T> action) {
+		for (int[] direction : AdventUtil.allDirectionsWithDiagonal) {
+			int mx = x + direction[0];
+			int my = y + direction[1];
+			if (my >= 0 && my < matrix.length) {
+				if (mx >= 0 && mx < matrix[my].length) {
+					matrix[my][mx] = action.apply(matrix[my][mx]);
+				}
+			}
+		}
+	}
 
 	public static int[] readFileByLineAsInts(String folder, String fileName) throws IOException {
 		Path path = Paths.get("src", "main", "resources", folder, fileName);
@@ -36,7 +50,8 @@ public class AdventUtil {
 		}
 	}
 
-	public static <G> List<G> readFileByLineWithMapping(String folder, String fileName, RowMappingFunction<G> mapping) throws IOException {
+	public static <G> List<G> readFileByLineWithMapping(String folder, String fileName, RowMappingFunction<G> mapping)
+			throws IOException {
 		Path path = Paths.get("src", "main", "resources", folder, fileName);
 
 		try (Stream<String> linesStream = Files.lines(path)) {
@@ -51,7 +66,7 @@ public class AdventUtil {
 			return linesStream.map(row -> stringCharsToInts(row)).toArray(int[][]::new);
 		}
 	}
-	
+
 	private static int[] stringCharsToInts(String line) {
 		String[] chars = line.split("");
 		return Arrays.stream(chars).map(c -> Integer.parseInt(c)).mapToInt(i -> i).toArray();
@@ -62,12 +77,13 @@ public class AdventUtil {
 		int numberOfColumns = rows[0].split(delimiter).length;
 		double[][] matrix = new double[numberOfColumns][numberOfRows];
 
-		for(int i=0; i<numberOfRows; i++) {
+		for (int i = 0; i < numberOfRows; i++) {
 			String rowData = rows[i].trim();
-			double[] row = Arrays.stream(rowData.split(delimiter)).filter(n -> StringUtils.isNotBlank(n)).mapToDouble(n -> Double.parseDouble(n)).toArray();
+			double[] row = Arrays.stream(rowData.split(delimiter)).filter(n -> StringUtils.isNotBlank(n))
+					.mapToDouble(n -> Double.parseDouble(n)).toArray();
 			matrix[i] = row;
 		}
-		
+
 		return matrix;
 	}
 
@@ -76,12 +92,13 @@ public class AdventUtil {
 		int numberOfColumns = rows[0].split(delimiter).length;
 		int[][] matrix = new int[numberOfColumns][numberOfRows];
 
-		for(int i=0; i<numberOfRows; i++) {
+		for (int i = 0; i < numberOfRows; i++) {
 			String rowData = rows[i].trim();
-			int[] row = Arrays.stream(rowData.split(delimiter)).filter(n -> StringUtils.isNotBlank(n)).mapToInt(n -> Integer.parseInt(n)).toArray();
+			int[] row = Arrays.stream(rowData.split(delimiter)).filter(n -> StringUtils.isNotBlank(n))
+					.mapToInt(n -> Integer.parseInt(n)).toArray();
 			matrix[i] = row;
 		}
-		
+
 		return matrix;
 	}
 
@@ -112,14 +129,15 @@ public class AdventUtil {
 //	}
 
 	public static <R> List<R> parseToType(String data, String separator, Function<String, R> mapping) {
-		return Arrays.stream(data.split(separator)).map(s -> StringUtils.trim(s)).map(s -> mapping.apply(s)).collect(Collectors.toList());
+		return Arrays.stream(data.split(separator)).map(s -> StringUtils.trim(s)).map(s -> mapping.apply(s))
+				.collect(Collectors.toList());
 	}
 
 	public static List<Block> findBlocks(List<String> data) {
 		List<Block> blocks = new ArrayList<>();
 		Block newBlock = new Block();
 
-		for (int i=0; i<data.size(); i++) {
+		for (int i = 0; i < data.size(); i++) {
 			String line = data.get(i);
 			if (StringUtils.isNoneBlank(line)) {
 				newBlock.add(line);
@@ -132,8 +150,9 @@ public class AdventUtil {
 	}
 
 	public static <T> Stream<T> reverse(Stream<T> stream) {
-        LinkedList<T> stack = new LinkedList<>();
-        stream.forEach(stack::push);
-        return stack.stream();
-    }
+		LinkedList<T> stack = new LinkedList<>();
+		stream.forEach(stack::push);
+		return stack.stream();
+	}
+
 }
