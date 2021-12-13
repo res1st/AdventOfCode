@@ -1,5 +1,7 @@
 package de.cas.adventofcode.util;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
@@ -153,6 +157,41 @@ public class AdventUtil {
 		LinkedList<T> stack = new LinkedList<>();
 		stream.forEach(stack::push);
 		return stack.stream();
+	}
+
+	public static List<List<String>> splitAtEmptyLines(List<String> input) {
+		List<List<String>> splittedLines = new ArrayList<>();
+		splittedLines.add(new ArrayList<>());
+		
+		for (String line : input) {
+			if (StringUtils.isBlank(line)) {
+				splittedLines.add(new ArrayList<>());
+				continue;
+			}
+
+			List<String> lastCreatedList = splittedLines.get(splittedLines.size()-1);
+			lastCreatedList.add(line);
+		}
+		
+		splittedLines = removeEmptyLists(splittedLines);
+		return splittedLines;
+	}
+
+	private static List<List<String>> removeEmptyLists(List<List<String>> splittedLines) {
+		splittedLines = splittedLines.stream().filter(l -> !l.isEmpty()).collect(Collectors.toList());
+		return splittedLines;
+	}
+
+	public static void writePointsAsImage(Points lastPoints, String fileName) throws IOException {
+		BufferedImage img = new BufferedImage(lastPoints.getMaxX() + 1, lastPoints.getMaxY() + 1, BufferedImage.TYPE_INT_RGB);
+		lastPoints.stream().forEach(p -> setPixel(p, img));
+
+		File file = new File(fileName);
+		ImageIO.write(img, "png", file);
+	}
+
+	private static void setPixel(Point p, BufferedImage img) {
+		img.setRGB(p.x, p.y, 0xFFFFFF);
 	}
 
 }
