@@ -253,12 +253,15 @@ public class AdventUtil {
 		img.setRGB(p.x, p.y, 0xFFFFFF);
 	}
 
-	public static String hexToBinary2(String s) {
-		return String.format("%" + (s.length() * 4) + "s", new BigInteger(s, 16).toString(2)).replace(" ", "0");
+	/**
+	 * Each character of hexadecimal corresponds to four bits of binary data.
+	 */
+	public static String hexToBinary4Bits(String hexString) {
+		return String.format("%" + (hexString.length() * 4) + "s", hexToBinary(hexString)).replace(" ", "0");
 	}
-	
+
 	public static String hexToBinary(String hexString) {
-		  return new BigInteger(hexString, 16).toString(2);
+		return new BigInteger(hexString, 16).toString(2);
 	}
 
 	public static int binaryToDecimal(String binaryString) {
