@@ -3,6 +3,7 @@ package de.cas.adventofcode.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,9 +27,18 @@ public class AdventUtil {
 	public static final int[][] allDirectionsWithDiagonal = new int[][] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 },
 			{ 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
 
-	public static <T> void doSurroundingsWithDiagonal(T[][] matrix, int x, int y,
-			Function<T, T> action) {
-		for (int[] direction : AdventUtil.allDirectionsWithDiagonal) {
+	public static final int[][] allDirections = new int[][] { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
+	public static <T> void doSurroundingsWithDiagonal(T[][] matrix, int x, int y, Function<T, T> action) {
+		doSurroundings(matrix, x, y, action, allDirectionsWithDiagonal);
+	}
+
+	public static <T> void doSurroundings(T[][] matrix, int x, int y, Function<T, T> action) {
+		doSurroundings(matrix, x, y, action, allDirections);
+	}
+
+	private static <T> void doSurroundings(T[][] matrix, int x, int y, Function<T, T> action, int[][] validDirections) {
+		for (int[] direction : validDirections) {
 			int mx = x + direction[0];
 			int my = y + direction[1];
 			if (my >= 0 && my < matrix.length) {
@@ -36,6 +47,40 @@ public class AdventUtil {
 				}
 			}
 		}
+	}
+
+	public static <T, R> List<R> iterate2dArray(T[][] matrix, BiFunction<T[][], ImmutablePoint, R> convertFunction) {
+		List<R> resultList = new ArrayList<R>();
+		for (int y = 0; y < matrix.length; y++) {
+			for (int x = 0; x < matrix[0].length; x++) {
+				R conversionResult = convertFunction.apply(matrix, new ImmutablePoint(x, y));
+				resultList.add(conversionResult);
+			}
+		}
+		return resultList;
+	}
+
+//	public static List<Integer> getCoordinatesAroundPoint(int x, int y, int maxX, int maxY) {
+//		List<ImmutablePoint> coordinates = new ArrayList<>(4);
+//		
+//	}
+
+	/**
+	 * FIXME: bi function with coord
+	 */
+	public static <T, R> List<R> convertSurroundings(T[][] matrix, int x, int y, Function<T, R> action,
+			int[][] validDirections) {
+		List<R> createdElements = new ArrayList<>();
+		for (int[] direction : validDirections) {
+			int mx = x + direction[0];
+			int my = y + direction[1];
+			if (my >= 0 && my < matrix.length) {
+				if (mx >= 0 && mx < matrix[my].length) {
+					createdElements.add(action.apply(matrix[my][mx]));
+				}
+			}
+		}
+		return createdElements;
 	}
 
 	public static int[] readFileByLineAsInts(String folder, String fileName) throws IOException {
@@ -71,9 +116,22 @@ public class AdventUtil {
 		}
 	}
 
+	public static Integer[][] readFileByLineByCharAsInteger(String folder, String fileName) throws IOException {
+		Path path = Paths.get("src", "main", "resources", folder, fileName);
+
+		try (Stream<String> linesStream = Files.lines(path)) {
+			return linesStream.map(row -> stringCharsToIntegers(row)).toArray(Integer[][]::new);
+		}
+	}
+
 	private static int[] stringCharsToInts(String line) {
 		String[] chars = line.split("");
 		return Arrays.stream(chars).map(c -> Integer.parseInt(c)).mapToInt(i -> i).toArray();
+	}
+
+	private static Integer[] stringCharsToIntegers(String line) {
+		String[] chars = line.split("");
+		return Arrays.stream(chars).map(c -> Integer.valueOf(c)).toArray(Integer[]::new);
 	}
 
 	public static double[][] parseMatrix(String[] rows, String delimiter) {
@@ -162,17 +220,17 @@ public class AdventUtil {
 	public static List<List<String>> splitAtEmptyLines(List<String> input) {
 		List<List<String>> splittedLines = new ArrayList<>();
 		splittedLines.add(new ArrayList<>());
-		
+
 		for (String line : input) {
 			if (StringUtils.isBlank(line)) {
 				splittedLines.add(new ArrayList<>());
 				continue;
 			}
 
-			List<String> lastCreatedList = splittedLines.get(splittedLines.size()-1);
+			List<String> lastCreatedList = splittedLines.get(splittedLines.size() - 1);
 			lastCreatedList.add(line);
 		}
-		
+
 		splittedLines = removeEmptyLists(splittedLines);
 		return splittedLines;
 	}
@@ -183,7 +241,8 @@ public class AdventUtil {
 	}
 
 	public static void writePointsAsImage(Points lastPoints, String fileName) throws IOException {
-		BufferedImage img = new BufferedImage(lastPoints.getMaxX() + 1, lastPoints.getMaxY() + 1, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(lastPoints.getMaxX() + 1, lastPoints.getMaxY() + 1,
+				BufferedImage.TYPE_INT_RGB);
 		lastPoints.stream().forEach(p -> setPixel(p, img));
 
 		File file = new File(fileName);
@@ -192,6 +251,22 @@ public class AdventUtil {
 
 	private static void setPixel(Point p, BufferedImage img) {
 		img.setRGB(p.x, p.y, 0xFFFFFF);
+	}
+
+	public static String hexToBinary2(String s) {
+		return String.format("%" + (s.length() * 4) + "s", new BigInteger(s, 16).toString(2)).replace(" ", "0");
+	}
+	
+	public static String hexToBinary(String hexString) {
+		  return new BigInteger(hexString, 16).toString(2);
+	}
+
+	public static int binaryToDecimal(String binaryString) {
+		return Integer.parseInt(binaryString, 2);
+	}
+
+	public static long binaryToDecimalLong(String binaryString) {
+		return Long.parseLong(binaryString, 2);
 	}
 
 }
