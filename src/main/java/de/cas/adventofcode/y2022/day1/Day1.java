@@ -22,9 +22,7 @@ public class Day1 {
 		System.out.printf("Max calories carried is %d %n", max.getAsLong());
 
 		// part2: top3 
-		List<Long> mutableSums = new ArrayList<>(sums);
-		Collections.sort(mutableSums, Collections.reverseOrder());
-		long sumTop3 = mutableSums.stream().limit(3).mapToLong(l -> l).sum();
+		long sumTop3 = sums.stream().sorted(Collections.reverseOrder()).limit(3).mapToLong(l -> l).sum();
 		System.out.printf("Top 3 calories are %d", sumTop3);
 	}
 
