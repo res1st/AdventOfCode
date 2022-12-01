@@ -208,6 +208,7 @@ public class AdventUtil {
 				newBlock = new Block();
 			}
 		}
+		blocks.add(newBlock);
 		return blocks;
 	}
 
