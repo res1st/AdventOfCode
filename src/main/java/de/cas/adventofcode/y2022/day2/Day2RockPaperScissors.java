@@ -1,4 +1,4 @@
-package de.cas.adventofcode.y2022.day1;
+package de.cas.adventofcode.y2022.day2;
 
 import java.io.IOException;
 import java.util.List;
