@@ -273,4 +273,29 @@ public class AdventUtil {
 		return Long.parseLong(binaryString, 2);
 	}
 
+	public static boolean isUniqueChars(String s) {
+
+		int i = 0;
+		int j = s.length() - 1;
+
+		while (true) {
+			if (i == s.length() - 1) {
+				break;
+			}
+
+			if (i != j && s.charAt(i) == s.charAt(j)) {
+				return false;
+			} else {
+				j--;
+
+				// compared to each other char, increment i now
+				if (j == 0) {
+					j = s.length() - 1;
+					i += 1;
+				}
+			}
+		}
+
+		return true;
+	}
 }
